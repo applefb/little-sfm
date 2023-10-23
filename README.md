@@ -12,6 +12,8 @@ cmakelist里面我只find opencv
 opencv_contrib 4.6.0需要开启viz模块
 
 我的版本是opencv_contrib 4.6.0
+
+vcpkg安装列表如下
 PS C:\Users\zhang> vcpkg list
 blas:x64-windows                                  2023-03-25         
 ceres:x64-windows                                 2.1.0#4             
