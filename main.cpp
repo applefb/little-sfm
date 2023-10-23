@@ -1,476 +1,3 @@
-//
-//#define _USE_MATH_DEFINES
-//#include <cmath>
-//#include <iostream>
-//#include <Eigen/Core>
-//#include <Eigen/Dense>
-//#include <chrono>
-//#include <opencv2/aruco/charuco.hpp>
-//#include <opencv2/aruco.hpp>
-//
-//
-//#include "opencv2/viz.hpp"
-//#include "opencv2/aruco/dictionary.hpp"
-//#include <opencv2/core/core.hpp>
-//#include <opencv2/imgproc/imgproc.hpp>
-//#include <opencv2/imgproc/types_c.h>
-//#include <opencv2/highgui/highgui.hpp>
-//#include <opencv2/core/eigen.hpp>
-//#include <opencv2/calib3d.hpp>
-//
-//
-//#include "detect_board.h"
-//#include "aruco_samples_ultity.hpp"
-//
-//#include <Eigen/Core>
-//#include <g2o/core/base_vertex.h>
-//#include <g2o/core/base_unary_edge.h>
-//#include <g2o/core/sparse_optimizer.h>
-//#include <g2o/core/block_solver.h>
-//#include <g2o/core/solver.h>
-//#include <g2o/core/optimization_algorithm_gauss_newton.h>
-//#include <g2o/solvers/dense/linear_solver_dense.h>
-//#include <sophus/se3.hpp>
-//
-//
-//using namespace std;
-//using namespace cv;
-//
-//// ÏñËØ×ø±ê×ªÏà»ú¹éÒ»»¯×ø±ê
-//Point2f pixel2cam(const Point2d& p, const Mat& K);
-//
-//typedef vector<Eigen::Vector2d> VecVector2d;
-//typedef vector<Eigen::Vector3d> VecVector3d;
-//
-//typedef vector<Sophus::SE3d> VecSE3d;
-//
-//
-//
-//void bundleAdjustmentG2O(
-//    const VecSE3d& T,
-//    const VecVector2d& points_2d,
-//    const Mat& K,
-//    Eigen::Vector3d& XYZ);
-//
-//int main()
-//{
-//
-//    //Ê±¼ä´Á
-//    long long times = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-//    std::cout << "long" << times << endl;
-//
-//
-//    /// <summary>
-//    /// Ïà»úÄÚ²Î¶ÁÈ¡
-//    /// </summary>
-//    /// <returns></returns>
-//    string camer_yml = "D:\\calibration\\out_apple142.yml";
-//    string photo_1 = "C:/Users/zhang/Pictures/apple14/IMG_0732.JPG";
-//    string photo_2 = "C:/Users/zhang/Pictures/apple14/IMG_0734.JPG";
-//    string photo_3 = "C:/Users/zhang/Pictures/apple14/IMG_0733.JPG";
-//    string photo_4 = "C:/Users/zhang/Pictures/apple14/IMG_0737.JPG";
-//    string photo_5 = "C:/Users/zhang/Pictures/apple14/IMG_0738.JPG";
-//    string photo_6 = "C:/Users/zhang/Pictures/apple14/IMG_0739.JPG";
-//    string photo_7 = "C:/Users/zhang/Pictures/apple14/IMG_0740.JPG";
-//    string photo_8 = "C:/Users/zhang/Pictures/apple14/IMG_0741.JPG";
-//
-//
-//    Mat camMatrix, distCoeffs;
-//    bool readOk = readCameraParameters(camer_yml, camMatrix, distCoeffs);
-//    cout << "cammatrix" << endl << camMatrix << endl << distCoeffs << endl;
-//
-//
-//    std::vector<cv::Mat> transformationMatrix_Vector;
-//    for (int i = 0; i < 8; ++i) 
-//    {
-//        transformationMatrix_Vector.push_back(cv::Mat::eye(4, 4, CV_64F));
-//    }
-//
-//
-//    std::vector<cv::Point2f> center_vector;
-//
-//    for (int i = 0; i < 8; ++i)
-//    {
-//        center_vector.push_back(cv::Point2f(0, 0));
-//    }
-//
-//
-//
-//    //detect_board_two(camMatrix, distCoeffs, transformationMatrix1, transformationMatrix2, center1, center2);
-//
-//
-//    detect_board_one(camMatrix, distCoeffs, photo_1, transformationMatrix_Vector.at(0), center_vector.at(0));
-//    detect_board_one(camMatrix, distCoeffs, photo_2, transformationMatrix_Vector.at(1), center_vector.at(1));
-//    detect_board_one(camMatrix, distCoeffs, photo_3, transformationMatrix_Vector.at(2), center_vector.at(2));
-//    detect_board_one(camMatrix, distCoeffs, photo_4, transformationMatrix_Vector.at(3), center_vector.at(3));
-//    detect_board_one(camMatrix, distCoeffs, photo_5, transformationMatrix_Vector.at(4), center_vector.at(4));
-//    detect_board_one(camMatrix, distCoeffs, photo_6, transformationMatrix_Vector.at(5), center_vector.at(5));
-//    detect_board_one(camMatrix, distCoeffs, photo_7, transformationMatrix_Vector.at(6), center_vector.at(6));
-//    detect_board_one(camMatrix, distCoeffs, photo_8, transformationMatrix_Vector.at(7), center_vector.at(7));
-//
-//
-//
-//
-//
-//    std::vector<Eigen::Vector2d> eigen_center_vector;
-//    //for (const cv::Point2f& point : center_vector) {
-//    //    Eigen::Vector2d eigen_point(point.x, point.y);
-//    //    eigen_center_vector.push_back(eigen_point);
-//    //}
-//
-//    for (int i = 0; i < 8; i++) 
-//    {
-//        if (i == 2)continue;
-//        Eigen::Vector2d eigen_point(center_vector.at(i).x, center_vector.at(i).y);
-//        eigen_center_vector.push_back(eigen_point);
-//    }
-//
-//
-//    std::vector<Sophus::SE3d> SE3d_vector;
-//
-//    for (int i = 0; i < 8; i++)
-//    {
-//        if (i == 2)continue;
-//        Eigen::Matrix4d eigenMatrix; // ´´½¨Ò»¸öEigen¾ØÕó
-//        cv::cv2eigen(transformationMatrix_Vector.at(i), eigenMatrix); // ½«cv::Mat×ª»»ÎªEigen¾ØÕó
-//
-//        // ÌáÈ¡Ğı×ª¾ØÕó²¿·Ö£¨Ç°3x3²¿·Ö£©
-//        Eigen::Matrix3d rotationMatrix = eigenMatrix.block<3, 3>(0, 0);
-//
-//        // ÌáÈ¡Æ½ÒÆÏòÁ¿²¿·Ö£¨Ç°3¸öÔªËØµÄ×îºóÒ»ÁĞ£©
-//        Eigen::Vector3d translationVector = eigenMatrix.block<3, 1>(0, 3);
-//
-//        // Ê¹ÓÃÌáÈ¡µÄĞı×ª¾ØÕóºÍÆ½ÒÆÏòÁ¿³õÊ¼»¯Sophus::SE3d
-//
-//        SE3d_vector.push_back(Sophus::SE3d(rotationMatrix, translationVector));
-//
-//
-//    }
-//
-//    Eigen::Vector3d result_g2o;
-//
-//    cout <<"SE3d_vector.size()" << SE3d_vector.size() << endl << endl;
-//    cout <<"eigen_center_vector.size() <" << eigen_center_vector.size() << endl << endl;
-//
-//    bundleAdjustmentG2O(
-//        SE3d_vector,
-//        eigen_center_vector,
-//        camMatrix,
-//        result_g2o);
-//
-//
-//
-//    cv::Mat T_1_2; // Ïà»úBÏà¶ÔÓÚÏà»úAµÄÍâ²Î¾ØÕó
-//
-//    // ¼ÆËãT_AµÄÄæ¾ØÕó
-//    cv::Mat T_1_inv;
-//    cv::invert(transformationMatrix_Vector.at(0), T_1_inv);
-//
-//    // ¼ÆËãÏà»úBÏà¶ÔÓÚÏà»úAµÄÍâ²Î¾ØÕó
-//    T_1_2 = transformationMatrix_Vector.at(1) * T_1_inv;
-//
-//    //cout << "T1_2 = " << T_1_2 << endl << endl;
-//
-//
-//    ////½á¹ûµÄµã£¬ÊÇÒÔµÚÒ»¸öÏà»úÎ¬ÊÀ½ç×ø±êÏµ
-//    //Mat T1 = (Mat_<float>(3, 4) <<
-//    //    1, 0, 0, 0,
-//    //    0, 1, 0, 0,
-//    //    0, 0, 1, 0);
-//    //Mat T2 = (Mat_<float>(3, 4) <<
-//    //    T_1_2.at<double>(0, 0), T_1_2.at<double>(0, 1), T_1_2.at<double>(0, 2), T_1_2.at<double>(0, 3),
-//    //    T_1_2.at<double>(1, 0), T_1_2.at<double>(1, 1), T_1_2.at<double>(1, 2), T_1_2.at<double>(1, 3),
-//    //    T_1_2.at<double>(2, 0), T_1_2.at<double>(2, 1), T_1_2.at<double>(2, 2), T_1_2.at<double>(2, 3)
-//    //    );
-//
-//
-//    //½á¹ûµÄµã£¬ÊÇÒÔmark°åÎª×ø±êÏµ
-//    //Mat T1 = (Mat_<float>(3, 4) <<
-//    //    transformationMatrix1.at<double>(0, 0), transformationMatrix1.at<double>(0, 1), transformationMatrix1.at<double>(0, 2), transformationMatrix1.at<double>(0, 3),
-//    //    transformationMatrix1.at<double>(1, 0), transformationMatrix1.at<double>(1, 1), transformationMatrix1.at<double>(1, 2), transformationMatrix1.at<double>(1, 3),
-//    //    transformationMatrix1.at<double>(2, 0), transformationMatrix1.at<double>(2, 1), transformationMatrix1.at<double>(2, 2), transformationMatrix1.at<double>(2, 3)
-//    //    );
-//
-//    //Mat T2 = (Mat_<float>(3, 4) <<
-//    //    transformationMatrix2.at<double>(0, 0), transformationMatrix2.at<double>(0, 1), transformationMatrix2.at<double>(0, 2), transformationMatrix2.at<double>(0, 3),
-//    //    transformationMatrix2.at<double>(1, 0), transformationMatrix2.at<double>(1, 1), transformationMatrix2.at<double>(1, 2), transformationMatrix2.at<double>(1, 3),
-//    //    transformationMatrix2.at<double>(2, 0), transformationMatrix2.at<double>(2, 1), transformationMatrix2.at<double>(2, 2), transformationMatrix2.at<double>(2, 3)
-//    //    );
-//
-//    // ´´½¨Ò»¸öĞĞµÄ·¶Î§£¬Ç°ÈıĞĞµÄË÷ÒıÊÇ0¡¢1¡¢2
-//    cv::Range rowRange(0, 3);
-//
-//    // Ê¹ÓÃĞĞµÄ·¶Î§À´»ñÈ¡Ç°ÈıĞĞÊı¾İ
-//    cv::Mat T1 = transformationMatrix_Vector.at(0)(rowRange, cv::Range::all());
-//    cv::Mat T2 = transformationMatrix_Vector.at(1)(rowRange, cv::Range::all());
-//
-//
-//
-//    vector<Point2f> pts_1, pts_2;
-//
-//    // ½«ÏñËØ×ø±ê×ª»»ÖÁÏà»ú×ø±ê
-//    pts_1.push_back(pixel2cam(center_vector.at(0), camMatrix));
-//    pts_2.push_back(pixel2cam(center_vector.at(1), camMatrix));
-//
-//
-//    Mat pts_4d;
-//    cv::triangulatePoints(T1, T2, pts_1, pts_2, pts_4d);
-//
-//    vector<Point3d> points;
-//
-//    // ×ª»»³É·ÇÆë´Î×ø±ê
-//    for (int i = 0; i < pts_4d.cols; i++) {
-//        Mat x = pts_4d.col(i);
-//        x /= x.at<float>(3, 0); // ¹éÒ»»¯
-//        Point3d p(
-//            x.at<float>(0, 0),
-//            x.at<float>(1, 0),
-//            x.at<float>(2, 0)
-//        );
-//        points.push_back(p);
-//    }
-//
-//
-//
-//    //std::cout << "×ª»»¾ØÕó1£ºmain" << std::endl;
-//
-//    //cout << transformationMatrix_Vector.at(0) << endl << endl;
-//
-//    //std::cout << "T1£ºmain" << std::endl;
-//
-//    //cout << T1 << endl << endl;
-//
-//
-//    //std::cout << "×ª»»¾ØÕó2 main£º" << std::endl;
-//    //cout << transformationMatrix_Vector.at(1) << endl << endl;
-//
-//    //std::cout << "center1£ºmain" << std::endl;
-//
-//    //cout << center_vector.at(0) << endl << endl;
-//
-//    //std::cout << "center2 main£º" << std::endl;
-//    //cout << center_vector.at(1) << endl << endl;
-//
-//    std::cout << "ÊÖ¶¯Èı½Ç»¯µÄ½á¹ûRESULTRESULTRESULTRESULTRESULTRESULTRESULT£º" << std::endl;
-//    cout << points.at(0) << endl;
-//
-//
-//
-//    Affine3d cam_1_pose(transformationMatrix_Vector.at(0)); // 03Ïà»ú±ä»»¾ØÕó
-//    cam_1_pose = cam_1_pose.inv();
-//
-//    Affine3d cam_2_pose(transformationMatrix_Vector.at(1)); // 03Ïà»ú±ä»»¾ØÕó
-//    cam_2_pose = cam_2_pose.inv();
-//
-//    Affine3d cam_3_pose(transformationMatrix_Vector.at(2)); // 03Ïà»ú±ä»»¾ØÕó
-//    cam_3_pose = cam_3_pose.inv();
-//
-//    Affine3d cam_4_pose(transformationMatrix_Vector.at(3)); // 03Ïà»ú±ä»»¾ØÕó
-//    cam_4_pose = cam_4_pose.inv();
-//    Affine3d cam_5_pose(transformationMatrix_Vector.at(4)); // 03Ïà»ú±ä»»¾ØÕó
-//    cam_5_pose = cam_5_pose.inv();
-//
-//    Affine3d cam_6_pose(transformationMatrix_Vector.at(5)); // 03Ïà»ú±ä»»¾ØÕó
-//    cam_6_pose = cam_6_pose.inv();
-//
-//    Affine3d cam_7_pose(transformationMatrix_Vector.at(6)); // 03Ïà»ú±ä»»¾ØÕó
-//    cam_7_pose = cam_7_pose.inv();
-//
-//    Affine3d cam_8_pose(transformationMatrix_Vector.at(7)); // 03Ïà»ú±ä»»¾ØÕó
-//    cam_8_pose = cam_8_pose.inv();
-//
-//    Affine3d transform = Affine3d::Identity();
-//    transform.translation(points.at(0));
-//
-//
-//    viz::Widget3D w = viz::WCoordinateSystem(0.5);
-//    //w.setColor(viz::Color::red());
-//    w.setRenderingProperty(viz::IMMEDIATE_RENDERING, 1);
-//
-//    cv::Mat image1, image2;
-//    image1 = cv::imread(photo_1);
-//    image2 = cv::imread(photo_2);
-//
-//    viz::Viz3d myWindow("Viz Demo");
-//
-//    viz::WCameraPosition camera_frustum(Vec2f(0.889484, 0.523599), image1); //camera_frustum/cpw_frustum
-//
-//    //viz::WCameraPosition camera_frustum(Matx33f(3.1, 0, 0.1, 0, 3.2, 0.2, 0, 0, 1)); //°×É«ÁâĞÎ
-//   //    viz::WCameraPosition camera_frustum(Vec2f(0.889484, 0.523599)); //camera_frustum/cpw_frustum
-//    //myWindow.showWidget("Camera_frustum", camera_frustum, cam_1_pose);
-//
-//    myWindow.showWidget("World_coordinate", w); // ½«"World_coordinate"µÄÑÕÉ«¸ü¸ÄÎªºìÉ«
-//    //myWindow.showWidget("cam1", viz::WCameraPosition(Vec2f(0.889484, 0.523599), image1), cam_1_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//    //myWindow.showWidget("cam2", viz::WCameraPosition(Vec2f(0.889484, 0.523599), image2), cam_2_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//
-//    myWindow.showWidget("cam1", viz::WCameraPosition(0.25), cam_1_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//    myWindow.showWidget("cam2", viz::WCameraPosition(0.25), cam_2_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//    myWindow.showWidget("cam3", viz::WCameraPosition(0.25), cam_3_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//    myWindow.showWidget("cam4", viz::WCameraPosition(0.25), cam_4_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//    myWindow.showWidget("cam5", viz::WCameraPosition(0.25), cam_5_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//    myWindow.showWidget("cam6", viz::WCameraPosition(0.25), cam_6_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//    myWindow.showWidget("cam7", viz::WCameraPosition(0.25), cam_7_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//    myWindow.showWidget("cam8", viz::WCameraPosition(0.25), cam_8_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//    
-//    myWindow.showWidget("mark", viz::WCoordinateSystem(0.5), transform); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-//
-//    myWindow.spin();
-//
-//}
-//
-//
-//
-//
-//Point2f pixel2cam(const Point2d& p, const Mat& K) {
-//    return Point2f
-//    (
-//        (p.x - K.at<double>(0, 2)) / K.at<double>(0, 0),
-//        (p.y - K.at<double>(1, 2)) / K.at<double>(1, 1)
-//    );
-//}
-//
-//
-//
-//
-//
-//
-//
-///// vertex and edges used in g2o ba
-//class VertexPose_my : public g2o::BaseVertex<3, Eigen::Vector3d> 
-//{
-//public:
-//    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
-//
-//    virtual void setToOriginImpl() override 
-//    {
-//        _estimate << 0, 0, 0;
-//    }
-//
-//    /// left multiplication on SE3
-//    virtual void oplusImpl(const double* update) override 
-//    {
-//        _estimate += Eigen::Vector3d(update);
-//    }
-//
-//    virtual bool read(istream& in) override 
-//    { return true; }
-//
-//    virtual bool write(ostream& out) const override 
-//    { return true; }
-//};
-//
-//
-//class EdgeProjection_my : public g2o::BaseUnaryEdge<2, Eigen::Vector2d, VertexPose_my> 
-//{
-//public:
-//    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
-//
-//    EdgeProjection_my(const Sophus::SE3d& pos, const Eigen::Matrix3d& K) : t(pos), _K(K) {}
-//
-//    virtual void computeError() override 
-//    {
-//        const VertexPose_my* v = static_cast<VertexPose_my*> (_vertices[0]);
-//        Eigen::Vector3d x_estimate = v->estimate();
-//        Eigen::Vector3d pos_pixel = _K * (t * x_estimate);
-//        pos_pixel /= pos_pixel[2];
-//        _error = _measurement - pos_pixel.head<2>();
-//    }
-//
-//    //virtual void linearizeOplus() override {
-//    //  const VertexPose_my *v = static_cast<VertexPose_my*> (_vertices[0]);
-//    //  Sophus::SE3d T = v->estimate();
-//    //  Eigen::Vector3d pos_cam = T * _pos3d;
-//    //  double fx = _K(0, 0);
-//    //  double fy = _K(1, 1);
-//    //  double cx = _K(0, 2);
-//    //  double cy = _K(1, 2);
-//    //  double X = pos_cam[0];
-//    //  double Y = pos_cam[1];
-//    //  double Z = pos_cam[2];
-//    //  double Z2 = Z * Z;
-//    //  _jacobianOplusXi
-//    //    << -fx / Z, 0, fx * X / Z2, fx * X * Y / Z2, -fx - fx * X * X / Z2, fx * Y / Z,
-//    //    0, -fy / Z, fy * Y / (Z * Z), fy + fy * Y * Y / Z2, -fy * X * Y / Z2, -fy * X / Z;
-//    //}
-//
-//    virtual bool read(istream& in) override { return true; }
-//
-//    virtual bool write(ostream& out) const override { return true; }
-//
-//private:
-//    Sophus::SE3d t;
-//    Eigen::Matrix3d _K;
-//};
-//
-//
-//
-//
-//
-//
-//
-//
-//void bundleAdjustmentG2O(
-//    const VecSE3d& T,
-//    const VecVector2d& points_2d,
-//    const Mat& K,
-//    Eigen::Vector3d & XYZ) 
-//{
-//
-//    // ¹¹½¨Í¼ÓÅ»¯£¬ÏÈÉè¶¨g2o
-//    typedef g2o::BlockSolver<g2o::BlockSolverTraits<3, 6>> BlockSolverType;  // pose is 6, landmark is 3
-//    typedef g2o::LinearSolverDense<BlockSolverType::PoseMatrixType> LinearSolverType; // ÏßĞÔÇó½âÆ÷ÀàĞÍ
-//    // Ìİ¶ÈÏÂ½µ·½·¨£¬¿ÉÒÔ´ÓGN, LM, DogLeg ÖĞÑ¡
-//    auto solver = new g2o::OptimizationAlgorithmGaussNewton(
-//        g2o::make_unique<BlockSolverType>(g2o::make_unique<LinearSolverType>()));
-//    g2o::SparseOptimizer optimizer;     // Í¼Ä£ĞÍ
-//    optimizer.setAlgorithm(solver);   // ÉèÖÃÇó½âÆ÷
-//    optimizer.setVerbose(true);       // ´ò¿ªµ÷ÊÔÊä³ö
-//
-//    // vertex             //[0.294733, 0.17403, 0.000187977]ÕæÊµÖµ
-//    //Eigen::Vector3d  initialEstimate = Eigen::Vector3d::UnitX(); // µ¥Î»ÏòÁ¿ (1, 0, 0)   NO
-//    //Eigen::Vector3d  initialEstimate = Eigen::Vector3d (1, 1, 1); // OK
-//    Eigen::Vector3d  initialEstimate = Eigen::Vector3d(0, 0, 0); // OK
-//
-//    VertexPose_my* vertex_pose = new VertexPose_my(); // camera vertex_pose
-//    vertex_pose->setId(0);
-//    vertex_pose->setEstimate(initialEstimate);
-//    optimizer.addVertex(vertex_pose);
-//
-//    // K
-//    Eigen::Matrix3d K_eigen;
-//    K_eigen <<
-//        K.at<double>(0, 0), K.at<double>(0, 1), K.at<double>(0, 2),
-//        K.at<double>(1, 0), K.at<double>(1, 1), K.at<double>(1, 2),
-//        K.at<double>(2, 0), K.at<double>(2, 1), K.at<double>(2, 2);
-//
-//    // edges
-//    int index = 1;
-//    for (size_t i = 0; i < points_2d.size(); ++i) 
-//    {
-//        auto p2d = points_2d[i];
-//        auto Ti = T[i];
-//        EdgeProjection_my* edge = new EdgeProjection_my(Ti, K_eigen);
-//        edge->setId(index);
-//        edge->setVertex(0, vertex_pose);
-//        edge->setMeasurement(p2d);
-//        edge->setInformation(Eigen::Matrix2d::Identity());
-//        optimizer.addEdge(edge);
-//        index++;
-//    }
-//
-//    chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
-//    optimizer.initializeOptimization();
-//    optimizer.optimize(10);
-//    chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
-//    chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-//    cout << "optimization costs time: " << time_used.count() << " seconds." << endl;
-//    cout << "pose estimated by g2o =\n" << vertex_pose->estimate().matrix() << endl;
-//    XYZ = vertex_pose->estimate();
-//}
-
-
-
-
 
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -511,7 +38,7 @@
 using namespace std;
 using namespace cv;
 
-// ÏñËØ×ø±ê×ªÏà»ú¹éÒ»»¯×ø±ê
+// åƒç´ åæ ‡è½¬ç›¸æœºå½’ä¸€åŒ–åæ ‡
 Point2f pixel2cam(const Point2d& p, const Mat& K);
 
 typedef vector<Eigen::Vector2d> VecVector2d;
@@ -530,24 +57,24 @@ void bundleAdjustmentG2O(
 int main()
 {
 
-    //Ê±¼ä´Á
+    //æ—¶é—´æˆ³
     long long times = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     std::cout << "long" << times << endl;
 
 
     /// <summary>
-    /// Ïà»úÄÚ²Î¶ÁÈ¡
+    /// ç›¸æœºå†…å‚è¯»å–
     /// </summary>
     /// <returns></returns>
-    string camer_yml = "D:\\calibration\\out_apple142.yml";
-    string photo_1 = "C:/Users/zhang/Pictures/apple14/IMG_0732.JPG";
-    string photo_2 = "C:/Users/zhang/Pictures/apple14/IMG_0734.JPG";
-    string photo_3 = "C:/Users/zhang/Pictures/apple14/IMG_0733.JPG";
-    string photo_4 = "C:/Users/zhang/Pictures/apple14/IMG_0737.JPG";
-    string photo_5 = "C:/Users/zhang/Pictures/apple14/IMG_0738.JPG";
-    string photo_6 = "C:/Users/zhang/Pictures/apple14/IMG_0739.JPG";
-    string photo_7 = "C:/Users/zhang/Pictures/apple14/IMG_0740.JPG";
-    string photo_8 = "C:/Users/zhang/Pictures/apple14/IMG_0741.JPG";
+    string camer_yml = "./out_apple142.yml";
+    string photo_1 = "./IMG_0732.JPG";
+    string photo_2 = "./IMG_0734.JPG";
+    string photo_3 = "./IMG_0733.JPG";
+    string photo_4 = "./IMG_0737.JPG";
+    string photo_5 = "./IMG_0738.JPG";
+    string photo_6 = "./IMG_0739.JPG";
+    string photo_7 = "./IMG_0740.JPG";
+    string photo_8 = "./IMG_0741.JPG";
 
 
     Mat camMatrix, distCoeffs;
@@ -606,16 +133,16 @@ int main()
     for (int i = 0; i < 8; i++)
     {
         //if (i == 2)continue;
-        Eigen::Matrix4d eigenMatrix; // ´´½¨Ò»¸öEigen¾ØÕó
-        cv::cv2eigen(transformationMatrix_Vector.at(i), eigenMatrix); // ½«cv::Mat×ª»»ÎªEigen¾ØÕó
+        Eigen::Matrix4d eigenMatrix; // åˆ›å»ºä¸€ä¸ªEigençŸ©é˜µ
+        cv::cv2eigen(transformationMatrix_Vector.at(i), eigenMatrix); // å°†cv::Matè½¬æ¢ä¸ºEigençŸ©é˜µ
 
-        // ÌáÈ¡Ğı×ª¾ØÕó²¿·Ö£¨Ç°3x3²¿·Ö£©
+        // æå–æ—‹è½¬çŸ©é˜µéƒ¨åˆ†ï¼ˆå‰3x3éƒ¨åˆ†ï¼‰
         Eigen::Matrix3d rotationMatrix = eigenMatrix.block<3, 3>(0, 0);
 
-        // ÌáÈ¡Æ½ÒÆÏòÁ¿²¿·Ö£¨Ç°3¸öÔªËØµÄ×îºóÒ»ÁĞ£©
+        // æå–å¹³ç§»å‘é‡éƒ¨åˆ†ï¼ˆå‰3ä¸ªå…ƒç´ çš„æœ€åä¸€åˆ—ï¼‰
         Eigen::Vector3d translationVector = eigenMatrix.block<3, 1>(0, 3);
 
-        // Ê¹ÓÃÌáÈ¡µÄĞı×ª¾ØÕóºÍÆ½ÒÆÏòÁ¿³õÊ¼»¯Sophus::SE3d
+        // ä½¿ç”¨æå–çš„æ—‹è½¬çŸ©é˜µå’Œå¹³ç§»å‘é‡åˆå§‹åŒ–Sophus::SE3d
 
         SE3d_vector.push_back(Sophus::SE3d(rotationMatrix, translationVector));
 
@@ -635,19 +162,19 @@ int main()
 
 
 
-    cv::Mat T_1_2; // Ïà»úBÏà¶ÔÓÚÏà»úAµÄÍâ²Î¾ØÕó
+    cv::Mat T_1_2; // ç›¸æœºBç›¸å¯¹äºç›¸æœºAçš„å¤–å‚çŸ©é˜µ
 
-    // ¼ÆËãT_AµÄÄæ¾ØÕó
+    // è®¡ç®—T_Açš„é€†çŸ©é˜µ
     cv::Mat T_1_inv;
     cv::invert(transformationMatrix_Vector.at(0), T_1_inv);
 
-    // ¼ÆËãÏà»úBÏà¶ÔÓÚÏà»úAµÄÍâ²Î¾ØÕó
+    // è®¡ç®—ç›¸æœºBç›¸å¯¹äºç›¸æœºAçš„å¤–å‚çŸ©é˜µ
     T_1_2 = transformationMatrix_Vector.at(1) * T_1_inv;
 
     //cout << "T1_2 = " << T_1_2 << endl << endl;
 
 
-    ////½á¹ûµÄµã£¬ÊÇÒÔµÚÒ»¸öÏà»úÎ¬ÊÀ½ç×ø±êÏµ
+    ////ç»“æœçš„ç‚¹ï¼Œæ˜¯ä»¥ç¬¬ä¸€ä¸ªç›¸æœºç»´ä¸–ç•Œåæ ‡ç³»
     //Mat T1 = (Mat_<float>(3, 4) <<
     //    1, 0, 0, 0,
     //    0, 1, 0, 0,
@@ -659,7 +186,7 @@ int main()
     //    );
 
 
-    //½á¹ûµÄµã£¬ÊÇÒÔmark°åÎª×ø±êÏµ
+    //ç»“æœçš„ç‚¹ï¼Œæ˜¯ä»¥markæ¿ä¸ºåæ ‡ç³»
     //Mat T1 = (Mat_<float>(3, 4) <<
     //    transformationMatrix1.at<double>(0, 0), transformationMatrix1.at<double>(0, 1), transformationMatrix1.at<double>(0, 2), transformationMatrix1.at<double>(0, 3),
     //    transformationMatrix1.at<double>(1, 0), transformationMatrix1.at<double>(1, 1), transformationMatrix1.at<double>(1, 2), transformationMatrix1.at<double>(1, 3),
@@ -672,10 +199,10 @@ int main()
     //    transformationMatrix2.at<double>(2, 0), transformationMatrix2.at<double>(2, 1), transformationMatrix2.at<double>(2, 2), transformationMatrix2.at<double>(2, 3)
     //    );
 
-    // ´´½¨Ò»¸öĞĞµÄ·¶Î§£¬Ç°ÈıĞĞµÄË÷ÒıÊÇ0¡¢1¡¢2
+    // åˆ›å»ºä¸€ä¸ªè¡Œçš„èŒƒå›´ï¼Œå‰ä¸‰è¡Œçš„ç´¢å¼•æ˜¯0ã€1ã€2
     cv::Range rowRange(0, 3);
 
-    // Ê¹ÓÃĞĞµÄ·¶Î§À´»ñÈ¡Ç°ÈıĞĞÊı¾İ
+    // ä½¿ç”¨è¡Œçš„èŒƒå›´æ¥è·å–å‰ä¸‰è¡Œæ•°æ®
     cv::Mat T1 = transformationMatrix_Vector.at(0)(rowRange, cv::Range::all());
     cv::Mat T2 = transformationMatrix_Vector.at(1)(rowRange, cv::Range::all());
 
@@ -683,7 +210,7 @@ int main()
 
     vector<Point2f> pts_1, pts_2;
 
-    // ½«ÏñËØ×ø±ê×ª»»ÖÁÏà»ú×ø±ê
+    // å°†åƒç´ åæ ‡è½¬æ¢è‡³ç›¸æœºåæ ‡
     pts_1.push_back(pixel2cam(center_vector.at(0), camMatrix));
     pts_2.push_back(pixel2cam(center_vector.at(1), camMatrix));
 
@@ -693,10 +220,10 @@ int main()
 
     vector<Point3d> points;
 
-    // ×ª»»³É·ÇÆë´Î×ø±ê
+    // è½¬æ¢æˆéé½æ¬¡åæ ‡
     for (int i = 0; i < pts_4d.cols; i++) {
         Mat x = pts_4d.col(i);
-        x /= x.at<float>(3, 0); // ¹éÒ»»¯
+        x /= x.at<float>(3, 0); // å½’ä¸€åŒ–
         Point3d p(
             x.at<float>(0, 0),
             x.at<float>(1, 0),
@@ -707,51 +234,51 @@ int main()
 
 
 
-    //std::cout << "×ª»»¾ØÕó1£ºmain" << std::endl;
+    //std::cout << "è½¬æ¢çŸ©é˜µ1ï¼šmain" << std::endl;
 
     //cout << transformationMatrix_Vector.at(0) << endl << endl;
 
-    //std::cout << "T1£ºmain" << std::endl;
+    //std::cout << "T1ï¼šmain" << std::endl;
 
     //cout << T1 << endl << endl;
 
 
-    //std::cout << "×ª»»¾ØÕó2 main£º" << std::endl;
+    //std::cout << "è½¬æ¢çŸ©é˜µ2 mainï¼š" << std::endl;
     //cout << transformationMatrix_Vector.at(1) << endl << endl;
 
-    //std::cout << "center1£ºmain" << std::endl;
+    //std::cout << "center1ï¼šmain" << std::endl;
 
     //cout << center_vector.at(0) << endl << endl;
 
-    //std::cout << "center2 main£º" << std::endl;
+    //std::cout << "center2 mainï¼š" << std::endl;
     //cout << center_vector.at(1) << endl << endl;
 
-    std::cout << "ÊÖ¶¯Èı½Ç»¯µÄ½á¹ûRESULTRESULTRESULTRESULTRESULTRESULTRESULT£º" << std::endl;
+    std::cout << "æ‰‹åŠ¨ä¸‰è§’åŒ–çš„ç»“æœRESULTRESULTRESULTRESULTRESULTRESULTRESULTï¼š" << std::endl;
     cout << points.at(0) << endl;
 
 
 
-    Affine3d cam_1_pose(transformationMatrix_Vector.at(0)); // 03Ïà»ú±ä»»¾ØÕó
+    Affine3d cam_1_pose(transformationMatrix_Vector.at(0)); // 03ç›¸æœºå˜æ¢çŸ©é˜µ
     cam_1_pose = cam_1_pose.inv();
 
-    Affine3d cam_2_pose(transformationMatrix_Vector.at(1)); // 03Ïà»ú±ä»»¾ØÕó
+    Affine3d cam_2_pose(transformationMatrix_Vector.at(1)); // 03ç›¸æœºå˜æ¢çŸ©é˜µ
     cam_2_pose = cam_2_pose.inv();
 
-    Affine3d cam_3_pose(transformationMatrix_Vector.at(2)); // 03Ïà»ú±ä»»¾ØÕó
+    Affine3d cam_3_pose(transformationMatrix_Vector.at(2)); // 03ç›¸æœºå˜æ¢çŸ©é˜µ
     cam_3_pose = cam_3_pose.inv();
 
-    Affine3d cam_4_pose(transformationMatrix_Vector.at(3)); // 03Ïà»ú±ä»»¾ØÕó
+    Affine3d cam_4_pose(transformationMatrix_Vector.at(3)); // 03ç›¸æœºå˜æ¢çŸ©é˜µ
     cam_4_pose = cam_4_pose.inv();
-    Affine3d cam_5_pose(transformationMatrix_Vector.at(4)); // 03Ïà»ú±ä»»¾ØÕó
+    Affine3d cam_5_pose(transformationMatrix_Vector.at(4)); // 03ç›¸æœºå˜æ¢çŸ©é˜µ
     cam_5_pose = cam_5_pose.inv();
 
-    Affine3d cam_6_pose(transformationMatrix_Vector.at(5)); // 03Ïà»ú±ä»»¾ØÕó
+    Affine3d cam_6_pose(transformationMatrix_Vector.at(5)); // 03ç›¸æœºå˜æ¢çŸ©é˜µ
     cam_6_pose = cam_6_pose.inv();
 
-    Affine3d cam_7_pose(transformationMatrix_Vector.at(6)); // 03Ïà»ú±ä»»¾ØÕó
+    Affine3d cam_7_pose(transformationMatrix_Vector.at(6)); // 03ç›¸æœºå˜æ¢çŸ©é˜µ
     cam_7_pose = cam_7_pose.inv();
 
-    Affine3d cam_8_pose(transformationMatrix_Vector.at(7)); // 03Ïà»ú±ä»»¾ØÕó
+    Affine3d cam_8_pose(transformationMatrix_Vector.at(7)); // 03ç›¸æœºå˜æ¢çŸ©é˜µ
     cam_8_pose = cam_8_pose.inv();
 
     Affine3d transform = Affine3d::Identity();
@@ -770,24 +297,24 @@ int main()
 
     viz::WCameraPosition camera_frustum(Vec2f(0.889484, 0.523599), image1); //camera_frustum/cpw_frustum
 
-    //viz::WCameraPosition camera_frustum(Matx33f(3.1, 0, 0.1, 0, 3.2, 0.2, 0, 0, 1)); //°×É«ÁâĞÎ
+    //viz::WCameraPosition camera_frustum(Matx33f(3.1, 0, 0.1, 0, 3.2, 0.2, 0, 0, 1)); //ç™½è‰²è±å½¢
    //    viz::WCameraPosition camera_frustum(Vec2f(0.889484, 0.523599)); //camera_frustum/cpw_frustum
     //myWindow.showWidget("Camera_frustum", camera_frustum, cam_1_pose);
 
-    myWindow.showWidget("World_coordinate", w); // ½«"World_coordinate"µÄÑÕÉ«¸ü¸ÄÎªºìÉ«
-    //myWindow.showWidget("cam1", viz::WCameraPosition(Vec2f(0.889484, 0.523599), image1), cam_1_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-    //myWindow.showWidget("cam2", viz::WCameraPosition(Vec2f(0.889484, 0.523599), image2), cam_2_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
+    myWindow.showWidget("World_coordinate", w); // å°†"World_coordinate"çš„é¢œè‰²æ›´æ”¹ä¸ºçº¢è‰²
+    //myWindow.showWidget("cam1", viz::WCameraPosition(Vec2f(0.889484, 0.523599), image1), cam_1_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
+    //myWindow.showWidget("cam2", viz::WCameraPosition(Vec2f(0.889484, 0.523599), image2), cam_2_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
 
-    myWindow.showWidget("cam1", viz::WCameraPosition(0.25), cam_1_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-    myWindow.showWidget("cam2", viz::WCameraPosition(0.25), cam_2_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-    myWindow.showWidget("cam3", viz::WCameraPosition(0.25), cam_3_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-    myWindow.showWidget("cam4", viz::WCameraPosition(0.25), cam_4_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-    myWindow.showWidget("cam5", viz::WCameraPosition(0.25), cam_5_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-    myWindow.showWidget("cam6", viz::WCameraPosition(0.25), cam_6_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-    myWindow.showWidget("cam7", viz::WCameraPosition(0.25), cam_7_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
-    myWindow.showWidget("cam8", viz::WCameraPosition(0.25), cam_8_pose); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
+    myWindow.showWidget("cam1", viz::WCameraPosition(0.25), cam_1_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
+    myWindow.showWidget("cam2", viz::WCameraPosition(0.25), cam_2_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
+    myWindow.showWidget("cam3", viz::WCameraPosition(0.25), cam_3_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
+    myWindow.showWidget("cam4", viz::WCameraPosition(0.25), cam_4_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
+    myWindow.showWidget("cam5", viz::WCameraPosition(0.25), cam_5_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
+    myWindow.showWidget("cam6", viz::WCameraPosition(0.25), cam_6_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
+    myWindow.showWidget("cam7", viz::WCameraPosition(0.25), cam_7_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
+    myWindow.showWidget("cam8", viz::WCameraPosition(0.25), cam_8_pose); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
 
-    myWindow.showWidget("mark", viz::WCoordinateSystem(0.5), transform); // ´´½¨3ºÅÏà»úÎ»ÓÚÊÀ½ç×ø±êÏµµÄÔ­µã
+    myWindow.showWidget("mark", viz::WCoordinateSystem(0.5), transform); // åˆ›å»º3å·ç›¸æœºä½äºä¸–ç•Œåæ ‡ç³»çš„åŸç‚¹
 
     myWindow.spin();
 
@@ -813,34 +340,34 @@ void bundleAdjustmentG2O(
     Eigen::Vector3d& XYZ)
 {
 
-    // ¹¹½¨Í¼ÓÅ»¯£¬ÏÈÉè¶¨g2o
+    // æ„å»ºå›¾ä¼˜åŒ–ï¼Œå…ˆè®¾å®šg2o
     typedef g2o::BlockSolver<g2o::BlockSolverTraits<3, 6>> BlockSolverType;  // pose is 6, landmark is 3
-    typedef g2o::LinearSolverDense<BlockSolverType::PoseMatrixType> LinearSolverType; // ÏßĞÔÇó½âÆ÷ÀàĞÍ
-    // Ìİ¶ÈÏÂ½µ·½·¨£¬¿ÉÒÔ´ÓGN, LM, DogLeg ÖĞÑ¡
+    typedef g2o::LinearSolverDense<BlockSolverType::PoseMatrixType> LinearSolverType; // çº¿æ€§æ±‚è§£å™¨ç±»å‹
+    // æ¢¯åº¦ä¸‹é™æ–¹æ³•ï¼Œå¯ä»¥ä»GN, LM, DogLeg ä¸­é€‰
     auto solver = new g2o::OptimizationAlgorithmGaussNewton(
         g2o::make_unique<BlockSolverType>(g2o::make_unique<LinearSolverType>()));
-    g2o::SparseOptimizer optimizer;     // Í¼Ä£ĞÍ
-    optimizer.setAlgorithm(solver);   // ÉèÖÃÇó½âÆ÷
-    optimizer.setVerbose(true);       // ´ò¿ªµ÷ÊÔÊä³ö
+    g2o::SparseOptimizer optimizer;     // å›¾æ¨¡å‹
+    optimizer.setAlgorithm(solver);   // è®¾ç½®æ±‚è§£å™¨
+    optimizer.setVerbose(true);       // æ‰“å¼€è°ƒè¯•è¾“å‡º
 
-    // vertex             //[0.294733, 0.17403, 0.000187977]ÕæÊµÖµ
-    //Eigen::Vector3d  initialEstimate = Eigen::Vector3d::UnitX(); // µ¥Î»ÏòÁ¿ (1, 0, 0)   NO
+    // vertex             //[0.294733, 0.17403, 0.000187977]çœŸå®å€¼
+    //Eigen::Vector3d  initialEstimate = Eigen::Vector3d::UnitX(); // å•ä½å‘é‡ (1, 0, 0)   NO
     //Eigen::Vector3d  initialEstimate = Eigen::Vector3d (1, 1, 1); // OK
     Eigen::Vector3d  initialEstimate = Eigen::Vector3d(0, 0, 0); // OK
 
-    ////ÉãÏñÍ·Î»×Ë½ÚµãÌí¼Ó
+    ////æ‘„åƒå¤´ä½å§¿èŠ‚ç‚¹æ·»åŠ 
     for (size_t i = 0; i < T.size(); ++i)
     {
         auto Ti = T[i];
 
-        // ´´½¨Ò»¸ög2o::SE3Quat¶ÔÏó
+        // åˆ›å»ºä¸€ä¸ªg2o::SE3Quatå¯¹è±¡
         g2o::SE3Quat g2o_se3quat;
 
-        // ´ÓSophus::SE3d¶ÔÏóÖĞÌáÈ¡Æ½ÒÆÏòÁ¿ºÍĞı×ª¾ØÕó
+        // ä»Sophus::SE3då¯¹è±¡ä¸­æå–å¹³ç§»å‘é‡å’Œæ—‹è½¬çŸ©é˜µ
         Eigen::Vector3d translation = Ti.translation();
         Eigen::Matrix3d rotation = Ti.rotationMatrix();
 
-        // Ê¹ÓÃÌáÈ¡µÄĞÅÏ¢Ìî³äg2o::SE3Quat¶ÔÏó
+        // ä½¿ç”¨æå–çš„ä¿¡æ¯å¡«å……g2o::SE3Quatå¯¹è±¡
         g2o_se3quat.setRotation(Eigen::Quaterniond(rotation));
         g2o_se3quat.setTranslation(translation);
 
@@ -858,7 +385,7 @@ void bundleAdjustmentG2O(
 
 
     /// <summary>
-    /// ÌØÕ÷µã½ÚµãÌí¼Ó
+    /// ç‰¹å¾ç‚¹èŠ‚ç‚¹æ·»åŠ 
     /// </summary>
     /// <param name="T"></param>
     /// <param name="points_2d"></param>
@@ -879,8 +406,8 @@ void bundleAdjustmentG2O(
         K.at<double>(1, 0), K.at<double>(1, 1), K.at<double>(1, 2),
         K.at<double>(2, 0), K.at<double>(2, 1), K.at<double>(2, 2);
 
-    ///ÉãÏñÍ·²ÎÊıÉèÖÃ
-        //Ïà»úÄÚ²Î
+    ///æ‘„åƒå¤´å‚æ•°è®¾ç½®
+        //ç›¸æœºå†…å‚
     g2o::CameraParameters* camera = new g2o::CameraParameters(K.at<double>(1, 1), Eigen::Vector2d(K.at<double>(0, 2), K.at<double>(1, 2)), 0);
     camera->setId(0);
     optimizer.addParameter(camera);
