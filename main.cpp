@@ -66,15 +66,15 @@ int main()
     /// 相机内参读取
     /// </summary>
     /// <returns></returns>
-    string camer_yml = "./out_apple142.yml";
-    string photo_1 = "./IMG_0732.JPG";
-    string photo_2 = "./IMG_0734.JPG";
-    string photo_3 = "./IMG_0733.JPG";
-    string photo_4 = "./IMG_0737.JPG";
-    string photo_5 = "./IMG_0738.JPG";
-    string photo_6 = "./IMG_0739.JPG";
-    string photo_7 = "./IMG_0740.JPG";
-    string photo_8 = "./IMG_0741.JPG";
+    string camer_yml = "../out_apple142.yml";
+    string photo_1 = "../IMG_0732.JPG";
+    string photo_2 = "../IMG_0734.JPG";
+    string photo_3 = "../IMG_0733.JPG";
+    string photo_4 = "../IMG_0737.JPG";
+    string photo_5 = "../IMG_0738.JPG";
+    string photo_6 = "../IMG_0739.JPG";
+    string photo_7 = "../IMG_0740.JPG";
+    string photo_8 = "../IMG_0741.JPG";
 
 
     Mat camMatrix, distCoeffs;
