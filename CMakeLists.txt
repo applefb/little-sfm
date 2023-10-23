@@ -3,7 +3,7 @@ project(304sfm_copy)
 
 set(CMAKE_BUILD_TYPE "Release")
 # 指定查找路径，例如 "C:/path/to/ExampleLib"
-set(OpenCV_DIR "E:/project/opencv_contrib_4.6.0/opencv_contrib-4.6.0_build/install")
+#set(OpenCV_DIR "E:/project/opencv_contrib_4.6.0/opencv_contrib-4.6.0_build/install")
 
 
 find_package(OpenCV  REQUIRED)
