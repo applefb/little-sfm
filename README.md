@@ -1,4 +1,6 @@
 # little-sfm
+
+#https://blog.csdn.net/weixin_46450859/article/details/134011752
 通过8张包含mark板和mark的图片，g2o图优化出mark中心点的3D位置，多视图几何
 本工程是在vs2019上编写的
 本工程可以当作slam14讲ch7的例子
