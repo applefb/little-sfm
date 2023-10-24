@@ -80,6 +80,7 @@ int main()
     Mat camMatrix, distCoeffs;
     bool readOk = readCameraParameters(camer_yml, camMatrix, distCoeffs);
     cout << "cammatrix" << endl << camMatrix << endl << distCoeffs << endl;
+    //注意，如果是自己赋值的话，一定要是double类型的
 
 
     std::vector<cv::Mat> transformationMatrix_Vector;
