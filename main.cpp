@@ -213,7 +213,8 @@ int main()
     // 将像素坐标转换至相机坐标
     pts_1.push_back(pixel2cam(center_vector.at(0), camMatrix));
     pts_2.push_back(pixel2cam(center_vector.at(1), camMatrix));
-
+    //这里测试过triangulatePoints的鲁棒性，把center_vector.at(0)和center_vector.at(1)各自偏移了500像素，都正常输出，只是准确度差很多
+    
 
     Mat pts_4d;
     cv::triangulatePoints(T1, T2, pts_1, pts_2, pts_4d);
