@@ -5,33 +5,33 @@ using namespace cv;
 int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatrix1, cv::Mat& transformationMatrix2, cv::Point2f& center1, cv::Point2f& center2)
 {
 
-    // ×Öµä¶ÁÈ¡
+    // å­—å…¸è¯»å–
     cv::Ptr<cv::aruco::Dictionary> dictionary_6x6 =
         cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 
     cv::Ptr<cv::aruco::Dictionary> dictionary_4x4 =
         cv::aruco::getPredefinedDictionary(cv::aruco::DICT_ARUCO_ORIGINAL);
 
-    // ¶ÁÈ¡Í¼Æ¬
+    // è¯»å–å›¾ç‰‡
     cv::Mat image1, imageCopy1;
     image1 = cv::imread("C:/Users/zhang/Pictures/apple14/IMG_0732.JPG");
     image1.copyTo(imageCopy1);
 
 
-    // ¶ÁÈ¡Í¼Æ¬
+    // è¯»å–å›¾ç‰‡
     cv::Mat image2, imageCopy2;
     image2 = cv::imread("C:/Users/zhang/Pictures/apple14/IMG_0734.JPG");
     image2.copyTo(imageCopy2);
 
 
-    // board¶ÔÏóÖ¸Õë£¬ÔÚºóÃæÓĞcreateº¯ÊıÀ´Êµ¼Ê´´½¨
-    // ÏÂÃæÕâĞ©²ÎÊıĞèÒªÓÃÀ´¼ÆËãÏà»úÎ»×Ë
+    // boardå¯¹è±¡æŒ‡é’ˆï¼Œåœ¨åé¢æœ‰createå‡½æ•°æ¥å®é™…åˆ›å»º
+    // ä¸‹é¢è¿™äº›å‚æ•°éœ€è¦ç”¨æ¥è®¡ç®—ç›¸æœºä½å§¿
     cv::Ptr<cv::aruco::GridBoard> board =
-        cv::aruco::GridBoard::create(5,             //Ã¿ĞĞ¶àÉÙ¸öMarker
-            7,             //Ã¿ÁĞ¶àÉÙ¸öMarker
-            0.034,          //marker³¤¶È
-            0.0075,          //markerÖ®¼äµÄ¼ä¸ô
-            dictionary_6x6);   //×Öµä
+        cv::aruco::GridBoard::create(5,             //æ¯è¡Œå¤šå°‘ä¸ªMarker
+            7,             //æ¯åˆ—å¤šå°‘ä¸ªMarker
+            0.034,          //markeré•¿åº¦
+            0.0075,          //markerä¹‹é—´çš„é—´éš”
+            dictionary_6x6);   //å­—å…¸
 
     std::vector<int> ids1;
     std::vector<std::vector<cv::Point2f> > corners1;
@@ -39,7 +39,7 @@ int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatri
     std::vector<std::vector<cv::Point2f> > corners2;
 
 
-    // ¼ì²âMarker°å
+    // æ£€æµ‹Markeræ¿
     cv::aruco::detectMarkers(image1, dictionary_6x6, corners1, ids1);
     cv::aruco::detectMarkers(image2, dictionary_6x6, corners2, ids2);
 
@@ -47,9 +47,9 @@ int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatri
     std::vector<std::vector<cv::Point2f> > corners_mark1;
     std::vector<int> ids_mark2;
     std::vector<std::vector<cv::Point2f> > corners_mark2;
-    // ¼ì²âMarker
+    // æ£€æµ‹Marker
     cv::aruco::detectMarkers(image1, dictionary_4x4, corners_mark1, ids_mark1);
-    // ¼ì²âMarker
+    // æ£€æµ‹Marker
     cv::aruco::detectMarkers(image2, dictionary_4x4, corners_mark2, ids_mark2);
 
     cout << "corners_mark1.size() = " << corners_mark1.size() << endl << endl;
@@ -76,24 +76,24 @@ int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatri
     center2.y /= 4.0;
 
 
-    // ´´½¨Ò»¸öScalar¶ÔÏó£¬±íÊ¾BGRÑÕÉ«£¬ºìÉ«Í¨µÀÎª0£¬ÂÌÉ«Í¨µÀÎª0£¬À¶É«Í¨µÀÎª255
+    // åˆ›å»ºä¸€ä¸ªScalarå¯¹è±¡ï¼Œè¡¨ç¤ºBGRé¢œè‰²ï¼Œçº¢è‰²é€šé“ä¸º0ï¼Œç»¿è‰²é€šé“ä¸º0ï¼Œè“è‰²é€šé“ä¸º255
     cv::Scalar blueColor(255, 255, 255);
 
     circle(imageCopy1, center1, 10, blueColor);
     circle(imageCopy2, center2, 10, blueColor);
 
-    // ÏÔÊ¾ÕıÈ·µÄMarker
+    // æ˜¾ç¤ºæ­£ç¡®çš„Marker
     if (ids1.size() > 0)
     {
         cout << "track thing" << endl;
-        // »æÖÆ¼ì²â±ß¿ò
+        // ç»˜åˆ¶æ£€æµ‹è¾¹æ¡†
         cv::aruco::drawDetectedMarkers(imageCopy1, corners1, ids1);
         cv::aruco::drawDetectedMarkers(imageCopy2, corners2, ids2);
 
         cv::aruco::drawDetectedMarkers(imageCopy1, corners_mark1, ids_mark1);
         cv::aruco::drawDetectedMarkers(imageCopy2, corners_mark2, ids_mark2);
 
-        //        // ¹À¼ÆÏà»úÎ»×Ë(Ïà¶ÔÓÚÃ¿Ò»¸ömarker)
+        //        // ä¼°è®¡ç›¸æœºä½å§¿(ç›¸å¯¹äºæ¯ä¸€ä¸ªmarker)
 
         std::vector<cv::Vec3d> rvecs_mark, tvecs_mark;
         cv::aruco::estimatePoseSingleMarkers(corners_mark1, 0.044, camMatrix, distCoeffs, rvecs_mark, tvecs_mark);
@@ -103,7 +103,7 @@ int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatri
         cout << endl << "tvecs_mark.at(0) = " << endl;
         cout << tvecs_mark.at(0) << endl << endl;
 
-        //// ¹À¼ÆÏà»úÎ»×Ë(Ïà¶ÔÓÚ aruco °å)
+        //// ä¼°è®¡ç›¸æœºä½å§¿(ç›¸å¯¹äº aruco æ¿)
         cv::Mat rvec1, tvec1;
         int valid = cv::aruco::estimatePoseBoard(corners1, ids1, board, camMatrix, distCoeffs, rvec1, tvec1);
         cv::Mat rvec2, tvec2;
@@ -119,11 +119,11 @@ int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatri
 
 
 
-        // ½«Ğı×ªÏòÁ¿×ª»»ÎªĞı×ª¾ØÕó
+        // å°†æ—‹è½¬å‘é‡è½¬æ¢ä¸ºæ—‹è½¬çŸ©é˜µ
         cv::Mat rotationMatrix;
         cv::Rodrigues(rvec1, rotationMatrix);
 
-        // ½«Ğı×ª¾ØÕóºÍÆ½ÒÆÏòÁ¿×éºÏ³É×ª»»¾ØÕó
+        // å°†æ—‹è½¬çŸ©é˜µå’Œå¹³ç§»å‘é‡ç»„åˆæˆè½¬æ¢çŸ©é˜µ
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 transformationMatrix1.at<double>(i, j) = rotationMatrix.at<double>(i, j);
@@ -131,23 +131,23 @@ int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatri
             transformationMatrix1.at<double>(i, 3) = tvec1.at<double>(i);
         }
 
-        // ´òÓ¡×ª»»¾ØÕó
-        std::cout << "r1£º" << std::endl;
+        // æ‰“å°è½¬æ¢çŸ©é˜µ
+        std::cout << "r1ï¼š" << std::endl;
         std::cout << rotationMatrix << std::endl;
-        std::cout << "t1£º" << std::endl;
+        std::cout << "t1ï¼š" << std::endl;
         std::cout << tvec1 << std::endl;
 
-        std::cout << "×ª»»¾ØÕó£º" << std::endl;
+        std::cout << "è½¬æ¢çŸ©é˜µï¼š" << std::endl;
         std::cout << transformationMatrix1 << std::endl << endl;
 
 
 
 
-        // ½«Ğı×ªÏòÁ¿×ª»»ÎªĞı×ª¾ØÕó
+        // å°†æ—‹è½¬å‘é‡è½¬æ¢ä¸ºæ—‹è½¬çŸ©é˜µ
         cv::Mat rotationMatrix2;
         cv::Rodrigues(rvec2, rotationMatrix2);
 
-        // ½«Ğı×ª¾ØÕóºÍÆ½ÒÆÏòÁ¿×éºÏ³É×ª»»¾ØÕó
+        // å°†æ—‹è½¬çŸ©é˜µå’Œå¹³ç§»å‘é‡ç»„åˆæˆè½¬æ¢çŸ©é˜µ
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 transformationMatrix2.at<double>(i, j) = rotationMatrix2.at<double>(i, j);
@@ -155,12 +155,12 @@ int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatri
             transformationMatrix2.at<double>(i, 3) = tvec2.at<double>(i);
         }
 
-        // ´òÓ¡×ª»»¾ØÕó
-        std::cout << "r1£º" << std::endl;
+        // æ‰“å°è½¬æ¢çŸ©é˜µ
+        std::cout << "r1ï¼š" << std::endl;
         std::cout << rotationMatrix2 << std::endl << endl;
-        std::cout << "t1£º" << std::endl;
+        std::cout << "t1ï¼š" << std::endl;
         std::cout << tvec2 << std::endl << endl;
-        std::cout << "×ª»»¾ØÕó2£º" << std::endl;
+        std::cout << "è½¬æ¢çŸ©é˜µ2ï¼š" << std::endl;
         std::cout << transformationMatrix2 << std::endl << endl;
 
 
@@ -168,7 +168,7 @@ int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatri
 
         // draw axis for each marker
 
-            /// µÃµ½µÄÎ»×Ë¹À¼ÆÊÇ£º´Óboard×ø±êÏµµ½Ïà»ú×ø±êÏµµÄ
+            /// å¾—åˆ°çš„ä½å§¿ä¼°è®¡æ˜¯ï¼šä»boardåæ ‡ç³»åˆ°ç›¸æœºåæ ‡ç³»çš„
 
         cv::drawFrameAxes(imageCopy1, camMatrix, distCoeffs, rvec1, tvec1, 0.1);
         cv::drawFrameAxes(imageCopy2, camMatrix, distCoeffs, rvec2, tvec2, 0.1);
@@ -195,42 +195,42 @@ int detect_board_two(Mat camMatrix, Mat distCoeffs, cv::Mat& transformationMatri
 int detect_board_one(Mat camMatrix, Mat distCoeffs, std::string filename ,Mat& transformationMatrix, cv::Point2f& center)
 {
 
-    // ×Öµä¶ÁÈ¡
+    // å­—å…¸è¯»å–
     cv::Ptr<cv::aruco::Dictionary> dictionary_6x6 =
         cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 
     cv::Ptr<cv::aruco::Dictionary> dictionary_4x4 =
         cv::aruco::getPredefinedDictionary(cv::aruco::DICT_ARUCO_ORIGINAL);
 
-    // ¶ÁÈ¡Í¼Æ¬
+    // è¯»å–å›¾ç‰‡
     cv::Mat image, imageCopy;
     image = cv::imread(filename);
     image.copyTo(imageCopy);
 
 
 
-    // board¶ÔÏóÖ¸Õë£¬ÔÚºóÃæÓĞcreateº¯ÊıÀ´Êµ¼Ê´´½¨
-    // ÏÂÃæÕâĞ©²ÎÊıĞèÒªÓÃÀ´¼ÆËãÏà»úÎ»×Ë
+    // boardå¯¹è±¡æŒ‡é’ˆï¼Œåœ¨åé¢æœ‰createå‡½æ•°æ¥å®é™…åˆ›å»º
+    // ä¸‹é¢è¿™äº›å‚æ•°éœ€è¦ç”¨æ¥è®¡ç®—ç›¸æœºä½å§¿
     cv::Ptr<cv::aruco::GridBoard> board =
-        cv::aruco::GridBoard::create(5,             //Ã¿ĞĞ¶àÉÙ¸öMarker
-            7,             //Ã¿ÁĞ¶àÉÙ¸öMarker
-            0.034,          //marker³¤¶È
-            0.0075,          //markerÖ®¼äµÄ¼ä¸ô
-            dictionary_6x6);   //×Öµä
+        cv::aruco::GridBoard::create(5,             //æ¯è¡Œå¤šå°‘ä¸ªMarker
+            7,             //æ¯åˆ—å¤šå°‘ä¸ªMarker
+            0.034,          //markeré•¿åº¦
+            0.0075,          //markerä¹‹é—´çš„é—´éš”
+            dictionary_6x6);   //å­—å…¸
 
     std::vector<int> ids;
     std::vector<std::vector<cv::Point2f> > corners;
 
 
 
-    // ¼ì²âMarker°å
+    // æ£€æµ‹Markeræ¿
     cv::aruco::detectMarkers(image, dictionary_6x6, corners, ids);
 
 
     std::vector<int> ids_mark;
     std::vector<std::vector<cv::Point2f> > corners_mark;
 
-    // ¼ì²âMarker
+    // æ£€æµ‹Marker
     cv::aruco::detectMarkers(image, dictionary_4x4, corners_mark, ids_mark);
 
 
@@ -250,22 +250,22 @@ int detect_board_one(Mat camMatrix, Mat distCoeffs, std::string filename ,Mat& t
 
 
 
-    // ´´½¨Ò»¸öScalar¶ÔÏó£¬±íÊ¾BGRÑÕÉ«£¬ºìÉ«Í¨µÀÎª0£¬ÂÌÉ«Í¨µÀÎª0£¬À¶É«Í¨µÀÎª255
+    // åˆ›å»ºä¸€ä¸ªScalarå¯¹è±¡ï¼Œè¡¨ç¤ºBGRé¢œè‰²ï¼Œçº¢è‰²é€šé“ä¸º0ï¼Œç»¿è‰²é€šé“ä¸º0ï¼Œè“è‰²é€šé“ä¸º255
     cv::Scalar blueColor(255, 255, 255);
 
     circle(imageCopy, center, 10, blueColor);
 
 
-    // ÏÔÊ¾ÕıÈ·µÄMarker
+    // æ˜¾ç¤ºæ­£ç¡®çš„Marker
     if (ids.size() > 0)
     {
 
-        // »æÖÆ¼ì²â±ß¿ò
+        // ç»˜åˆ¶æ£€æµ‹è¾¹æ¡†
         cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
         cv::aruco::drawDetectedMarkers(imageCopy, corners_mark, ids_mark);
 
 
-        //     // ¹À¼ÆÏà»úÎ»×Ë(Ïà¶ÔÓÚÃ¿Ò»¸ömarker)
+        //     // ä¼°è®¡ç›¸æœºä½å§¿(ç›¸å¯¹äºæ¯ä¸€ä¸ªmarker)
 
         std::vector<cv::Vec3d> rvecs_mark, tvecs_mark;
         cv::aruco::estimatePoseSingleMarkers(corners_mark, 0.044, camMatrix, distCoeffs, rvecs_mark, tvecs_mark);
@@ -275,7 +275,7 @@ int detect_board_one(Mat camMatrix, Mat distCoeffs, std::string filename ,Mat& t
         cout << endl << "tvecs_mark.at(0) = " << endl;
         cout << tvecs_mark.at(0) << endl << endl;
 
-        //// ¹À¼ÆÏà»úÎ»×Ë(Ïà¶ÔÓÚ aruco °å)
+        //// ä¼°è®¡ç›¸æœºä½å§¿(ç›¸å¯¹äº aruco æ¿)
         cv::Mat rvec, tvec;
         int valid = cv::aruco::estimatePoseBoard(corners, ids, board, camMatrix, distCoeffs, rvec, tvec);
 
@@ -290,11 +290,11 @@ int detect_board_one(Mat camMatrix, Mat distCoeffs, std::string filename ,Mat& t
 
 
 
-        // ½«Ğı×ªÏòÁ¿×ª»»ÎªĞı×ª¾ØÕó
+        // å°†æ—‹è½¬å‘é‡è½¬æ¢ä¸ºæ—‹è½¬çŸ©é˜µ
         cv::Mat rotationMatrix;
         cv::Rodrigues(rvec, rotationMatrix);
 
-        // ½«Ğı×ª¾ØÕóºÍÆ½ÒÆÏòÁ¿×éºÏ³É×ª»»¾ØÕó
+        // å°†æ—‹è½¬çŸ©é˜µå’Œå¹³ç§»å‘é‡ç»„åˆæˆè½¬æ¢çŸ©é˜µ
         for (int i = 0; i < 3; i++) 
         {
             for (int j = 0; j < 3; j++) 
@@ -304,22 +304,19 @@ int detect_board_one(Mat camMatrix, Mat distCoeffs, std::string filename ,Mat& t
             transformationMatrix.at<double>(i, 3) = tvec.at<double>(i);
         }
 
-        // ´òÓ¡×ª»»¾ØÕó
-        std::cout << "Ò»¸öR£º" << std::endl;
-        std::cout << rotationMatrix << std::endl;
-        std::cout << "Ò»¸öT£º" << std::endl;
-        std::cout << tvec << std::endl;
+        // æ‰“å°è½¬æ¢çŸ©é˜µ
 
-        std::cout << "×ª»»¾ØÕó£º" << std::endl;
+
+        std::cout << "è½¬æ¢çŸ©é˜µï¼š===============================" << std::endl;
         std::cout << transformationMatrix << std::endl << endl;
-
-        std::cout << "Íê³É¹À¼ÆÒ»¸ö" << std::endl << endl;
+        std::cout << center << std::endl << endl;
+        std::cout << "å®Œæˆä¼°è®¡ä¸€ä¸ª======================================" << std::endl << endl;
 
 
 
         // draw axis for each marker
 
-            /// µÃµ½µÄÎ»×Ë¹À¼ÆÊÇ£º´Óboard×ø±êÏµµ½Ïà»ú×ø±êÏµµÄ
+            /// å¾—åˆ°çš„ä½å§¿ä¼°è®¡æ˜¯ï¼šä»boardåæ ‡ç³»åˆ°ç›¸æœºåæ ‡ç³»çš„
 
         cv::drawFrameAxes(imageCopy, camMatrix, distCoeffs, rvec, tvec, 0.1);
 
